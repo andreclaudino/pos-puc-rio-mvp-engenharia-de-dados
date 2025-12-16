@@ -1,0 +1,20 @@
+# The main pipeline for ingest_to_bronze
+
+resources:
+  pipelines:
+    ingest_to_bronze_etl:
+      name: ingest_to_bronze_etl
+      catalog: ${var.catalog}
+      schema: ${var.schema}
+      serverless: true
+      root_path: "../src/ingest_to_bronze_etl"
+
+      libraries:
+        - glob:
+            include: ../src/ingest_to_bronze_etl/transformations/**
+
+      environment:
+        dependencies:
+          # We include every dependency defined by pyproject.toml by defining an editable environment
+          # that points to the folder where pyproject.toml is deployed.
+          - --editable ${workspace.file_path}
