@@ -29,7 +29,7 @@ resources:
             - --write-mode
             - overwrite
             - --metadata-path
-            - /Workspace/${workspace.file_path}/metadata/bronze-table-descriptors.json"
+            - /Workspace/Users/ceberiloclaus@gmail.com/pos-puc-rio-mvp-engenharia-de-dados/metadata/bronze-table-descriptors.json
         environment_key: default
 
 
