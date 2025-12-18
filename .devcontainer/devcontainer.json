@@ -5,7 +5,8 @@
 	"image": "mcr.microsoft.com/devcontainers/python:2-3.11-bookworm",
 	"features": {
 		"ghcr.io/devcontainers-extra/features/curl-apt-get:1": {},
-		"ghcr.io/devcontainer-community/devcontainer-features/astral.sh-uv:1": {}
+		"ghcr.io/devcontainer-community/devcontainer-features/astral.sh-uv:1": {},
+		"ghcr.io/roul/devcontainer-features/mise-node:1": {}
 	},
 
 	"postCreateCommand": ".devcontainer/startup.sh",
@@ -15,7 +16,9 @@
 				"databricks.databricks",
 				"databricks.sqltools-databricks-driver",
 				"ms-python.black-formatter",
-				"gnramsay.create-python-module"
+				"gnramsay.create-python-module",
+				"tamasfe.even-better-toml",
+				"saoudrizwan.claude-dev"
 			]
 		}
 	},
@@ -24,5 +27,9 @@
 		"source=${localEnv:HOME}/.databrickscfg,target=/home/vscode/.databrickscfg,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.ssh/,target=/home/vscode/.ssh/,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached"
-	]
+	],
+
+	"remoteEnv": {
+		"DATABRICKS_CONFIG_PROFILE": "DEFAULT"
+	}
 }
