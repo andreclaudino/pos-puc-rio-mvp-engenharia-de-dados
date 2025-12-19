@@ -91,16 +91,18 @@ def load_table_schema(file_path: str, table_name: str) -> Optional[Dict[str, Any
         if table_data:
             return table_data
         else:
-            logger.warning(f"Table '{table_name}' not found in the schema.")
-            return None
+            available_tables = list(schema_data.keys())
+            raise ValueError(f"Table '{table_name}' not found in metadata file {file_path}. Available tables: {available_tables}")
 
     except FileNotFoundError:
         logger.error(f"The file at {file_path} was not found.")
+        raise
     except json.JSONDecodeError:
         logger.error("Failed to decode JSON. Please check the file syntax.")
+        raise
     except Exception as e:
         logger.error(f"An unexpected error occurred: {e}")
-        return None
+        raise
 
 def load_raw_gzip_csv(source_url: str, remove_all_null: bool) -> DataFrame:
     """
@@ -150,7 +152,7 @@ def _load_csv_file(source_url: str) -> DataFrame:
             response = requests.get(source_url)
             response.raise_for_status()
             csv_data = io.BytesIO(response.content)
-            pdf = pd.read_csv(csv_data, compression='gzip')
+            pdf = pd.read_csv(csv_data, compression='gzip', low_memory=False)
 
             # df = spark.read.option("compression", "gzip").csv(source_url, header=True)
             df = spark.createDataFrame(pdf)
