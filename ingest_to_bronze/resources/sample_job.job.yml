@@ -23,7 +23,7 @@ resources:
               - --table
               - default_product_info
               - --source-feed-url
-              - "https://productdata.awin.com/datafeed/download/apikey/74332bfbefa939bf2fbd94f4fbfd6e3d/language/pt/fid/44669,46605,47729,47753,50585,51837,51987,52631,53075,53089,53091,58413,58627,63901,75921,79509,91869,91942,93360,98680,109288/rid/0/hasEnhancedFeeds/0/columns/aw_deep_link,product_name,aw_product_id,merchant_product_id,merchant_image_url,description,merchant_category,search_price/format/csv/delimiter/%2C/compression/gzip/adultcontent/1/"
+              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/default_product_info.csv.gz
               - --remove-all-null-columns
               - --write-mode
               - overwrite
@@ -43,7 +43,7 @@ resources:
               - --table
               - recommended_metadata
               - --source-feed-url
-              - "https://productdata.awin.com/datafeed/download/apikey/74332bfbefa939bf2fbd94f4fbfd6e3d/language/pt/fid/44669,46605,47729,47753,50585,51837,51987,52631,53075,53089,53091,58413,58627,63901,75921,79509,91869,91942,93360,98680,109288/rid/0/hasEnhancedFeeds/0/columns/aw_deep_link,product_name,aw_product_id,merchant_product_id,merchant_image_url,description,merchant_category,search_price,merchant_name,merchant_id,category_name,category_id,aw_image_url,currency,store_price,delivery_cost,merchant_deep_link,language,last_updated,display_price,data_feed_id/format/csv/delimiter/%2C/compression/gzip/adultcontent/1/"
+              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/recommended_metadata.csv.gz
               - --remove-all-null-columns
               - --write-mode
               - overwrite
@@ -63,7 +63,7 @@ resources:
               - --table
               - product_specifications
               - --source-feed-url
-              - "https://productdata.awin.com/datafeed/download/apikey/74332bfbefa939bf2fbd94f4fbfd6e3d/language/pt/fid/44669,46605,47729,47753,50585,51837,51987,52631,53075,53089,53091,58413,58627,63901,75921,79509,91869,91942,93360,98680,109288/rid/0/hasEnhancedFeeds/0/columns/aw_deep_link,product_name,aw_product_id,merchant_product_id,merchant_image_url,description,merchant_category,search_price,brand_name,brand_id,colour,product_short_description,specifications,condition,product_model,model_number,dimensions,keywords,promotional_text,product_type/format/csv/delimiter/%2C/compression/gzip/adultcontent/1/"
+              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/product_specifications.csv.gz
               - --remove-all-null-columns
               - --write-mode
               - overwrite
@@ -83,7 +83,7 @@ resources:
               - --table
               - category_hierarchy
               - --source-feed-url
-              - "https://productdata.awin.com/datafeed/download/apikey/74332bfbefa939bf2fbd94f4fbfd6e3d/language/pt/fid/44669,46605,47729,47753,50585,51837,51987,52631,53075,53089,53091,58413,58627,63901,75921,79509,91869,91942,93360,98680,109288/rid/0/hasEnhancedFeeds/0/columns/aw_deep_link,product_name,aw_product_id,merchant_product_id,merchant_image_url,description,merchant_category,search_price,commission_group,merchant_product_category_path,merchant_product_second_category,merchant_product_third_category/format/csv/delimiter/%2C/compression/gzip/adultcontent/1/"
+              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/category_hierarchy.csv.gz
               - --remove-all-null-columns
               - --write-mode
               - overwrite
@@ -103,7 +103,7 @@ resources:
               - --table
               - pricing_and_savings
               - --source-feed-url
-              - "https://productdata.awin.com/datafeed/download/apikey/74332bfbefa939bf2fbd94f4fbfd6e3d/language/pt/fid/44669,46605,47729,47753,50585,51837,51987,52631,53075,53089,53091,58413,58627,63901,75921,79509,91869,91942,93360,98680,109288/rid/0/hasEnhancedFeeds/0/columns/aw_deep_link,product_name,aw_product_id,merchant_product_id,merchant_image_url,description,merchant_category,search_price,rrp_price,saving,savings_percent,base_price,base_price_amount,base_price_text,product_price_old/format/csv/delimiter/%2C/compression/gzip/adultcontent/1/"
+              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/pricing_and_savings.csv.gz
               - --remove-all-null-columns
               - --write-mode
               - overwrite
@@ -123,7 +123,7 @@ resources:
               - --table
               - product_images
               - --source-feed-url
-              - "https://productdata.awin.com/datafeed/download/apikey/74332bfbefa939bf2fbd94f4fbfd6e3d/language/pt/fid/44669,46605,47729,47753,50585,51837,51987,52631,53075,53089,53091,58413,58627,63901,75921,79509,91869,91942,93360,98680,109288/rid/0/hasEnhancedFeeds/0/columns/aw_deep_link,product_name,aw_product_id,merchant_product_id,merchant_image_url,description,merchant_category,search_price,merchant_thumb_url,large_image,alternate_image,aw_thumb_url,alternate_image_two,alternate_image_three,alternate_image_four/format/csv/delimiter/%2C/compression/gzip/adultcontent/1/"
+              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/product_images.csv.gz
               - --remove-all-null-columns
               - --write-mode
               - overwrite
@@ -143,7 +143,7 @@ resources:
               - --table
               - ratings_and_reviews
               - --source-feed-url
-              - "https://productdata.awin.com/datafeed/download/apikey/74332bfbefa939bf2fbd94f4fbfd6e3d/language/pt/fid/44669,46605,47729,47753,50585,51837,51987,52631,53075,53089,53091,58413,58627,63901,75921,79509,91869,91942,93360,98680,109288/rid/0/hasEnhancedFeeds/0/columns/aw_deep_link,product_name,aw_product_id,merchant_product_id,merchant_image_url,description,merchant_category,search_price,reviews,average_rating,rating,number_available/format/csv/delimiter/%2C/compression/gzip/adultcontent/1/"
+              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/ratings_and_reviews.csv.gz
               - --remove-all-null-columns
               - --write-mode
               - overwrite
@@ -163,7 +163,7 @@ resources:
               - --table
               - product_identifiers
               - --source-feed-url
-              - "https://productdata.awin.com/datafeed/download/apikey/74332bfbefa939bf2fbd94f4fbfd6e3d/language/pt/fid/44669,46605,47729,47753,50585,51837,51987,52631,53075,53089,53091,58413,58627,63901,75921,79509,91869,91942,93360,98680,109288/rid/0/hasEnhancedFeeds/0/columns/aw_deep_link,product_name,aw_product_id,merchant_product_id,merchant_image_url,description,merchant_category,search_price,ean,isbn,upc,mpn,parent_product_id,product_GTIN/format/csv/delimiter/%2C/compression/gzip/adultcontent/1/"
+              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/product_identifiers.csv.gz
               - --remove-all-null-columns
               - --write-mode
               - overwrite

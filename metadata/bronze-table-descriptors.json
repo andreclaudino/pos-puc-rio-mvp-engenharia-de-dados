@@ -1,5 +1,5 @@
 {
-  "common_fields": {
+  "default_product_info": {
     "table_description": "Contains the core, mandatory information for every product in the Awin system. It serves as the primary identification and search layer.",
     "columns": {
       "aw_deep_link": { "data_type": "VARCHAR(2048)", "description": "The unique Awin tracking link for the product." },
@@ -12,7 +12,7 @@
       "search_price": { "data_type": "DECIMAL(10,2)", "description": "The current selling price used for search filtering." }
     }
   },
-  "recommended": {
+  "recommended_metadata": {
     "table_description": "Provides enriched metadata that improves the user experience, including store details, delivery costs, and synchronization timestamps.",
     "columns": {
       "merchant_name": { "data_type": "VARCHAR(255)", "description": "The name of the advertiser/store." },
@@ -30,7 +30,7 @@
       "data_feed_id": { "data_type": "INTEGER", "description": "Unique identifier for the data feed file." }
     }
   },
-  "specification": {
+  "product_specifications": {
     "table_description": "Detailed physical and technical attributes of the product, such as dimensions, brand, and model specifics.",
     "columns": {
       "brand_name": { "data_type": "VARCHAR(100)", "description": "The manufacturer or brand name." },
@@ -56,7 +56,7 @@
       "merchant_product_third_category": { "data_type": "VARCHAR(255)", "description": "Tertiary merchant classification." }
     }
   },
-  "product_prices": {
+  "pricing_and_savings": {
     "table_description": "Detailed financial data, including historical prices (RRP), discounts, and unit-based pricing.",
     "columns": {
       "rrp_price": { "data_type": "DECIMAL(10,2)", "description": "Recommended Retail Price." },
@@ -68,7 +68,7 @@
       "product_price_old": { "data_type": "DECIMAL(10,2)", "description": "Previous price before discount." }
     }
   },
-  "images": {
+  "product_images": {
     "table_description": "A collection of all visual assets associated with the product.",
     "columns": {
       "merchant_thumb_url": { "data_type": "VARCHAR(2048)", "description": "Merchant's small thumbnail URL." },
@@ -80,7 +80,7 @@
       "alternate_image_four": { "data_type": "VARCHAR(2048)", "description": "Fourth alternative view URL." }
     }
   },
-  "ratings": {
+  "ratings_and_reviews": {
     "table_description": "Social proof data including user ratings and review counts.",
     "columns": {
       "reviews": { "data_type": "TEXT", "description": "User-submitted reviews or comments." },
