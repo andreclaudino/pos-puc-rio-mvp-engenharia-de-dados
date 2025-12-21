@@ -681,6 +681,10 @@ O pipeline completo de ingestão e ETL foi construído utilizando *assets bundle
 
 ![Pipeline completo](report/imagens/tasks-sequence2.png)
 
+Aqui apresento um diagrama do pipeline explicitando as dependências e quais tasks correspondem a quais camadas
+
+![Diagrama do pipeline](report/imagens/task-flow.svg)
+
 
 ## Documentação das tabelas
 
