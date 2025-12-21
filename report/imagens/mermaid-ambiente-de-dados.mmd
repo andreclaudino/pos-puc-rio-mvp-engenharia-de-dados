@@ -1,0 +1,125 @@
+erDiagram
+    %% =========================================================
+    %% ESTILOS (CORES)
+    %% =========================================================
+    classDef silverClass fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000;
+    classDef goldClass fill:#fff9c4,stroke:#fbc02d,stroke-width:2px,color:#000;
+
+    %% =========================================================
+    %% CAMADA SILVER: silver_feeds
+    %% =========================================================
+    S_DEFAULT["silver_feeds.default_product_info"] {
+        bigint aw_product_id PK
+        string category
+        double search_price
+    }
+    
+    S_SPECS["silver_feeds.product_specifications"] {
+        bigint aw_product_id PK "FK"
+        string brand_name
+    }
+    
+    S_META["silver_feeds.recommended_metadata"] {
+        bigint aw_product_id PK "FK"
+        int merchant_id
+        string merchant_name
+        double display_price
+    }
+
+    %% Aplicando Estilo Silver (Usando o Alias)
+    class S_DEFAULT silverClass
+    class S_SPECS silverClass
+    class S_META silverClass
+
+    %% Relacionamentos Silver
+    S_DEFAULT ||--|| S_SPECS : "1:1 joins"
+    S_DEFAULT ||--|| S_META : "1:1 joins"
+
+    %% =========================================================
+    %% CAMADA GOLD: gold_price_analysis
+    %% =========================================================
+    
+    %% --- Grupo: Análise de Categorias ---
+    G_VAR["gold_price_analysis.category_price_variability"] {
+        string category PK
+        double price_amplitude
+    }
+    G_ANALYSIS["gold_price_analysis.category_price_analysis"] {
+        string category PK
+        double average_price
+    }
+    G_CLASS["gold_price_analysis.category_price_classification"] {
+        string category PK
+        double lux_percentage
+    }
+    G_AUDIT["gold_price_analysis.price_discrepancy_audit"] {
+        string category PK
+        double avg_diff
+    }
+
+    %% --- Grupo: Análise de Entidades ---
+    G_BRAND["gold_price_analysis.brand_price_segmentation"] {
+        string brand_name PK
+        string brand_segment
+    }
+    G_MERCH["gold_price_analysis.merchant_price_segmentation"] {
+        string merchant_name PK
+        string merchant_segment
+    }
+    G_MERCH_CAT["gold_price_analysis.merchant_category_segmentation"] {
+        string merchant_category PK
+        string category_segment
+    }
+    G_OFFER["gold_price_analysis.merchant_brand_offering_segmentation"] {
+        string merchant_name PK
+        string brand_name PK
+        string offering_segment
+    }
+
+    %% --- Grupo: Granularidade de Produto ---
+    G_PROD["gold_price_analysis.product_price_segmentation"] {
+        bigint aw_product_id PK
+        string price_segment
+    }
+
+    %% Aplicando Estilo Gold (Usando o Alias)
+    class G_VAR goldClass
+    class G_ANALYSIS goldClass
+    class G_CLASS goldClass
+    class G_AUDIT goldClass
+    class G_BRAND goldClass
+    class G_MERCH goldClass
+    class G_MERCH_CAT goldClass
+    class G_OFFER goldClass
+    class G_PROD goldClass
+
+    %% =========================================================
+    %% RELACIONAMENTOS GOLD-GOLD (Lógicos)
+    %% =========================================================
+    G_VAR }|..|{ G_ANALYSIS : "Same Grain"
+    G_ANALYSIS }|..|{ G_CLASS : "Same Grain"
+    G_MERCH }|..|{ G_OFFER : "Shared Dim"
+    G_BRAND }|..|{ G_OFFER : "Shared Dim"
+
+    %% =========================================================
+    %% LINHAGEM (ETL: silver_feeds -> gold_price_analysis)
+    %% =========================================================
+
+    %% ETL: Fluxo Principal
+    S_DEFAULT ||..|{ G_PROD : "ETL Source"
+    S_DEFAULT ||..|{ G_VAR : "ETL Source"
+    S_DEFAULT ||..|{ G_ANALYSIS : "ETL Source"
+    
+    %% ETL: Fluxo de Entidades
+    S_SPECS ||..|{ G_BRAND : "ETL Source"
+    
+    S_META ||..|{ G_MERCH : "ETL Source"
+    S_DEFAULT ||..|{ G_MERCH_CAT : "ETL Source"
+
+    %% ETL: Fluxo Cruzado
+    S_META ||..|{ G_OFFER : "ETL Source"
+    S_SPECS ||..|{ G_OFFER : "ETL Source"
+
+    %% ETL: Auditoria
+    S_DEFAULT ||..|{ G_AUDIT : "Compare"
+    S_META ||..|{ G_AUDIT : "Compare"

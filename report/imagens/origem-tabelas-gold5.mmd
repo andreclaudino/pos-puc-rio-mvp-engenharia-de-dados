@@ -1,0 +1,15 @@
+graph LR
+    %% ESTILOS
+    classDef silverClass fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000;
+    classDef goldClass fill:#fff9c4,stroke:#fbc02d,stroke-width:2px,color:#000;
+
+    %% SILVER
+    S_DEFAULT["silver_feeds.default_product_info"]:::silverClass
+    S_META["silver_feeds.recommended_metadata"]:::silverClass
+
+    %% GOLD
+    G_AUDIT["gold_price_analysis.price_discrepancy_audit"]:::goldClass
+
+    %% FLUXO ETL
+    S_DEFAULT -.->|Input: Search Price| G_AUDIT
+    S_META -.->|Input: Display Price| G_AUDIT
