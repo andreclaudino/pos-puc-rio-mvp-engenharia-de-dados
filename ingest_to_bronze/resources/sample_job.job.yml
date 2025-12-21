@@ -52,6 +52,105 @@ resources:
           - task_key: default_product_info_bronze
           environment_key: default
 
+        - task_key: category_price_variability_gold
+          python_wheel_task:
+            package_name: mvp
+            entry_point: create_gold_category_price_variability
+            parameters: [
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--write-mode", "overwrite",
+              "--catalog", "mvp",
+              "--silver-schema", "silver_feeds",
+              "--gold-schema", "gold_price_analysis",
+              "--gold-table", "category_price_variability"
+            ]
+          depends_on:
+          - task_key: default_product_info_silver
+          environment_key: default
+
+        - task_key: gold_category_price_classification
+          python_wheel_task:
+            package_name: mvp
+            entry_point: create_gold_category_price_classification
+            parameters: [
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--write-mode", "overwrite",
+              "--catalog", "mvp",
+              "--silver-schema", "silver_feeds",
+              "--gold-schema", "gold_price_analysis",
+              "--gold-table", "category_price_classification"
+            ]
+          depends_on:
+          - task_key: default_product_info_silver
+          environment_key: default
+
+        - task_key: gold_price_discrepancy_audit
+          python_wheel_task:
+            package_name: mvp
+            entry_point: create_gold_price_discrepancy_audit
+            parameters: [
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--write-mode", "overwrite",
+              "--catalog", "mvp",
+              "--silver-schema", "silver_feeds",
+              "--gold-schema", "gold_price_analysis",
+              "--gold-table", "price_discrepancy_audit"
+            ]
+          depends_on:
+          - task_key: default_product_info_silver
+          - task_key: recommended_metadata_silver
+          environment_key: default
+
+        - task_key: gold_product_price_segmentation
+          python_wheel_task:
+            package_name: mvp
+            entry_point: create_gold_product_price_segmentation
+            parameters: [
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--write-mode", "overwrite",
+              "--catalog", "mvp",
+              "--silver-schema", "silver_feeds",
+              "--gold-schema", "gold_price_analysis",
+              "--gold-table", "product_price_segmentation"
+            ]
+          depends_on:
+          - task_key: default_product_info_silver
+          environment_key: default
+
+        - task_key: gold_merchant_category_segmentation
+          python_wheel_task:
+            package_name: mvp
+            entry_point: create_gold_merchant_category_segmentation
+            parameters: [
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--write-mode", "overwrite",
+              "--catalog", "mvp",
+              "--silver-schema", "silver_feeds",
+              "--gold-schema", "gold_price_analysis",
+              "--gold-table", "merchant_category_segmentation"
+            ]
+          depends_on:
+          - task_key: default_product_info_silver
+          environment_key: default
+
+        - task_key: gold_merchant_brand_offering_segmentation
+          python_wheel_task:
+            package_name: mvp
+            entry_point: create_gold_merchant_brand_offering_segmentation
+            parameters: [
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--write-mode", "overwrite",
+              "--catalog", "mvp",
+              "--silver-schema", "silver_feeds",
+              "--gold-schema", "gold_price_analysis",
+              "--gold-table", "merchant_brand_offering_segmentation"
+            ]
+          depends_on:
+          - task_key: default_product_info_silver
+          - task_key: recommended_metadata_silver
+          - task_key: product_specifications_silver
+          environment_key: default
+
         - task_key: recommended_metadata_bronze        
           python_wheel_task:
             package_name: mvp
@@ -89,6 +188,23 @@ resources:
           - task_key: recommended_metadata_bronze
           environment_key: default
 
+        - task_key: gold_merchant_price_segmentation
+          python_wheel_task:
+            package_name: mvp
+            entry_point: create_gold_merchant_price_segmentation
+            parameters: [
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--write-mode", "overwrite",
+              "--catalog", "mvp",
+              "--silver-schema", "silver_feeds",
+              "--gold-schema", "gold_price_analysis",
+              "--gold-table", "merchant_price_segmentation"
+            ]
+          depends_on:
+          - task_key: default_product_info_silver
+          - task_key: recommended_metadata_silver
+          environment_key: default
+
         - task_key: product_specifications_bronze        
           python_wheel_task:
             package_name: mvp
@@ -109,7 +225,7 @@ resources:
               - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
           environment_key: default
 
-        - task_key: dproduct_specifications_silver
+        - task_key: product_specifications_silver
           python_wheel_task:
             package_name: mvp
             entry_point: transform_product_specifications_silver
@@ -126,105 +242,23 @@ resources:
           - task_key: product_specifications_bronze
           environment_key: default
 
-        # - task_key: category_hierarchy_bronze        
-        #   python_wheel_task:
-        #     package_name: mvp
-        #     entry_point: ingest_to_bronze
-        #     parameters:
-        #       - "--catalog"
-        #       - "mvp"
-        #       - "--schema"
-        #       - "bronze_feeds"
-        #       - --table
-        #       - category_hierarchy
-        #       - --source-feed-url
-        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/category_hierarchy.csv.gz
-        #       - --remove-all-null-columns
-        #       - --write-mode
-        #       - overwrite
-        #       - --metadata-path
-        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
-        #   environment_key: default
-
-        # - task_key: product_prices_bronze
-        #   python_wheel_task:
-        #     package_name: mvp
-        #     entry_point: ingest_to_bronze
-        #     parameters:
-        #       - "--catalog"
-        #       - "mvp"
-        #       - "--schema"
-        #       - "bronze_feeds"
-        #       - --table
-        #       - pricing_and_savings
-        #       - --source-feed-url
-        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/pricing_and_savings.csv.gz
-        #       - --remove-all-null-columns
-        #       - --write-mode
-        #       - overwrite
-        #       - --metadata-path
-        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
-        #   environment_key: default
-
-        # - task_key: images_bronze        
-        #   python_wheel_task:
-        #     package_name: mvp
-        #     entry_point: ingest_to_bronze
-        #     parameters:
-        #       - "--catalog"
-        #       - "mvp"
-        #       - "--schema"
-        #       - "bronze_feeds"
-        #       - --table
-        #       - product_images
-        #       - --source-feed-url
-        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/product_images.csv.gz
-        #       - --remove-all-null-columns
-        #       - --write-mode
-        #       - overwrite
-        #       - --metadata-path
-        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
-        #   environment_key: default
-
-        # - task_key: ratings_bronze        
-        #   python_wheel_task:
-        #     package_name: mvp
-        #     entry_point: ingest_to_bronze
-        #     parameters:
-        #       - "--catalog"
-        #       - "mvp"
-        #       - "--schema"
-        #       - "bronze_feeds"
-        #       - --table
-        #       - ratings_and_reviews
-        #       - --source-feed-url
-        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/ratings_and_reviews.csv.gz
-        #       - --remove-all-null-columns
-        #       - --write-mode
-        #       - overwrite
-        #       - --metadata-path
-        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
-        #   environment_key: default
-
-        # - task_key: product_identifiers_bronze        
-        #   python_wheel_task:
-        #     package_name: mvp
-        #     entry_point: ingest_to_bronze
-        #     parameters:
-        #       - "--catalog"
-        #       - "mvp"
-        #       - "--schema"
-        #       - "bronze_feeds"
-        #       - --table
-        #       - product_identifiers
-        #       - --source-feed-url
-        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/product_identifiers.csv.gz
-        #       - --remove-all-null-columns
-        #       - --write-mode
-        #       - overwrite
-        #       - --metadata-path
-        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
-        #   environment_key: default
+        - task_key: gold_brand_price_segmentation
+          python_wheel_task:
+            package_name: mvp
+            entry_point: create_gold_brand_price_segmentation
+            parameters: [
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--write-mode", "overwrite",
+              "--catalog", "mvp",
+              "--silver-schema", "silver_feeds",
+              "--gold-schema", "gold_price_analysis",
+              "--gold-table", "brand_price_segmentation"
+            ]
+          depends_on:
+          - task_key: default_product_info_silver
+          - task_key: product_specifications_silver
+          environment_key: default
+        
 
       environments:
         - environment_key: default

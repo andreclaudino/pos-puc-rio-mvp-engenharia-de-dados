@@ -62,98 +62,97 @@
       "promotional_text": { "data_type": "VARCHAR(500)", "description": "Marketing messages related to the product." },
       "product_type": { "data_type": "VARCHAR(100)", "description": "Secondary item classification." }
     }
-  },
-  "category_hierarchy": {
-    "table_description": "Focuses on the taxonomy and classification of the product within both Awin's and Merchant's systems.",
+  },   
+
+  "category_price_variability": {
+    "table_description": "Aggregated table focused on price range volatility per category. Used to identify categories with widest or narrowest price gaps.",
     "columns": {
-      "aw_deep_link": { "data_type": "VARCHAR(2048)", "description": "The unique Awin tracking link for the product." },
-      "product_name": { "data_type": "VARCHAR(255)", "description": "The full title or name of the product." },
-      "aw_product_id": { "data_type": "BIGINT", "description": "Awin's unique internal identifier for the product." },
-      "merchant_product_id": { "data_type": "VARCHAR(100)", "description": "The unique ID assigned to the product by the merchant." },
-      "merchant_image_url": { "data_type": "VARCHAR(2048)", "description": "Direct URL to the product image on the merchant's server." },
-      "description": { "data_type": "TEXT", "description": "Detailed description of the product features." },
-      "merchant_category": { "data_type": "VARCHAR(255)", "description": "The category name assigned by the merchant." },
-      "search_price": { "data_type": "DECIMAL(10,2)", "description": "The current selling price used for search filtering." },
-      "commission_group": { "data_type": "VARCHAR(100)", "description": "Group determining the commission rate." },
-      "merchant_product_category_path": { "data_type": "VARCHAR(1000)", "description": "Full breadcrumb path on the merchant site." },
-      "merchant_product_second_category": { "data_type": "VARCHAR(255)", "description": "Secondary merchant classification." },
-      "merchant_product_third_category": { "data_type": "VARCHAR(255)", "description": "Tertiary merchant classification." }
+      "category": { "data_type": "VARCHAR(255)", "description": "The classification of the product in the e-commerce platform" },
+      "product_count": { "data_type": "BIGINT", "description": "Total number of products in this category." },
+      "minimum_price": { "data_type": "DECIMAL(10,2)", "description": "The lowest search price found in this category." },
+      "maximum_price": { "data_type": "DECIMAL(10,2)", "description": "The highest search price found in this category." },
+      "price_amplitude": { "data_type": "DECIMAL(10,2)", "description": "The difference between the maximum and minimum price." }
     }
   },
-  "pricing_and_savings": {
-    "table_description": "Detailed financial data, including historical prices (RRP), discounts, and unit-based pricing.",
+  "category_price_analysis": {
+    "table_description": "Aggregated table focused on average price levels per category. Includes amplitude to allow filtering for specific volatility scenarios.",
     "columns": {
-      "aw_deep_link": { "data_type": "VARCHAR(2048)", "description": "The unique Awin tracking link for the product." },
-      "product_name": { "data_type": "VARCHAR(255)", "description": "The full title or name of the product." },
-      "aw_product_id": { "data_type": "BIGINT", "description": "Awin's unique internal identifier for the product." },
-      "merchant_product_id": { "data_type": "VARCHAR(100)", "description": "The unique ID assigned to the product by the merchant." },
-      "merchant_image_url": { "data_type": "VARCHAR(2048)", "description": "Direct URL to the product image on the merchant's server." },
-      "description": { "data_type": "TEXT", "description": "Detailed description of the product features." },
-      "merchant_category": { "data_type": "VARCHAR(255)", "description": "The category name assigned by the merchant." },
-      "search_price": { "data_type": "DECIMAL(10,2)", "description": "The current selling price used for search filtering." },
-      "rrp_price": { "data_type": "DECIMAL(10,2)", "description": "Recommended Retail Price." },
-      "saving": { "data_type": "DECIMAL(10,2)", "description": "Absolute value saved compared to RRP/Old price." },
-      "savings_percent": { "data_type": "INTEGER", "description": "Percentage discount applied." },
-      "base_price": { "data_type": "DECIMAL(10,2)", "description": "Reference price per unit." },
-      "base_price_amount": { "data_type": "DECIMAL(10,2)", "description": "Quantity for base price calculation." },
-      "base_price_text": { "data_type": "VARCHAR(100)", "description": "Textual unit price representation." },
-      "product_price_old": { "data_type": "DECIMAL(10,2)", "description": "Previous price before discount." }
+      "category": { "data_type": "VARCHAR(255)", "description": "The classification of the product in the e-commerce platform" },
+      "average_price": { "data_type": "DOUBLE", "description": "The average search price of products in this category." },
+      "price_amplitude": { "data_type": "DECIMAL(10,2)", "description": "The difference between max and min price, used for filtering narrowest/widest ranges." }
     }
   },
-  "product_images": {
-    "table_description": "A collection of all visual assets associated with the product.",
+  "category_price_classification": {
+    "table_description": "Segmentation of categories by price tiers (Lux, Medium, Cheap) based on global dataset statistics.",
     "columns": {
-      "aw_deep_link": { "data_type": "VARCHAR(2048)", "description": "The unique Awin tracking link for the product." },
-      "product_name": { "data_type": "VARCHAR(255)", "description": "The full title or name of the product." },
-      "aw_product_id": { "data_type": "BIGINT", "description": "Awin's unique internal identifier for the product." },
-      "merchant_product_id": { "data_type": "VARCHAR(100)", "description": "The unique ID assigned to the product by the merchant." },
-      "merchant_image_url": { "data_type": "VARCHAR(2048)", "description": "Direct URL to the product image on the merchant's server." },
-      "description": { "data_type": "TEXT", "description": "Detailed description of the product features." },
-      "merchant_category": { "data_type": "VARCHAR(255)", "description": "The category name assigned by the merchant." },
-      "search_price": { "data_type": "DECIMAL(10,2)", "description": "The current selling price used for search filtering." },
-      "merchant_thumb_url": { "data_type": "VARCHAR(2048)", "description": "Merchant's small thumbnail URL." },
-      "large_image": { "data_type": "VARCHAR(2048)", "description": "High-resolution product image URL." },
-      "alternate_image": { "data_type": "VARCHAR(2048)", "description": "First alternative view URL." },
-      "aw_thumb_url": { "data_type": "VARCHAR(2048)", "description": "Awin-processed thumbnail URL." },
-      "alternate_image_two": { "data_type": "VARCHAR(2048)", "description": "Second alternative view URL." },
-      "alternate_image_three": { "data_type": "VARCHAR(2048)", "description": "Third alternative view URL." },
-      "alternate_image_four": { "data_type": "VARCHAR(2048)", "description": "Fourth alternative view URL." }
+      "category": { "data_type": "VARCHAR(255)", "description": "The classification of the product in the e-commerce platform" },
+      "total_products": { "data_type": "BIGINT", "description": "Total number of products in the category." },
+      "lux_count": { "data_type": "BIGINT", "description": "Count of products classified as Luxury (> 90th percentile)." },
+      "medium_count": { "data_type": "BIGINT", "description": "Count of products between Median and 90th percentile." },
+      "cheap_count": { "data_type": "BIGINT", "description": "Count of products classified as Budget (< Median)." },
+      "lux_percentage": { "data_type": "DOUBLE", "description": "Percentage of Luxury products within the category." },
+      "medium_percentage": { "data_type": "DOUBLE", "description": "Percentage of Medium-tier products within the category." },
+      "cheap_percentage": { "data_type": "DOUBLE", "description": "Percentage of Budget products within the category." }
     }
   },
-  "ratings_and_reviews": {
-    "table_description": "Social proof data including user ratings and review counts.",
+  "price_discrepancy_audit": {
+    "table_description": "Audit table to monitor data consistency between search_price (backend) and display_price (frontend).",
     "columns": {
-      "aw_deep_link": { "data_type": "VARCHAR(2048)", "description": "The unique Awin tracking link for the product." },
-      "product_name": { "data_type": "VARCHAR(255)", "description": "The full title or name of the product." },
-      "aw_product_id": { "data_type": "BIGINT", "description": "Awin's unique internal identifier for the product." },
-      "merchant_product_id": { "data_type": "VARCHAR(100)", "description": "The unique ID assigned to the product by the merchant." },
-      "merchant_image_url": { "data_type": "VARCHAR(2048)", "description": "Direct URL to the product image on the merchant's server." },
-      "description": { "data_type": "TEXT", "description": "Detailed description of the product features." },
-      "merchant_category": { "data_type": "VARCHAR(255)", "description": "The category name assigned by the merchant." },
-      "search_price": { "data_type": "DECIMAL(10,2)", "description": "The current selling price used for search filtering." },
-      "reviews": { "data_type": "TEXT", "description": "User-submitted reviews or comments." },
-      "average_rating": { "data_type": "DECIMAL(3,2)", "description": "Mean score from user ratings." },
-      "rating": { "data_type": "VARCHAR(50)", "description": "General rating score or category." },
-      "number_available": { "data_type": "INTEGER", "description": "Count of available reviews." }
+      "category": { "data_type": "VARCHAR(255)", "description": "The classification of the product in the e-commerce platform" },
+      "average_price_difference": { "data_type": "DOUBLE", "description": "Average difference between display price and search price." },
+      "min_difference": { "data_type": "DECIMAL(10,2)", "description": "Smallest difference found (can be negative)." },
+      "max_difference": { "data_type": "DECIMAL(10,2)", "description": "Largest difference found." },
+      "count_with_discrepancy": { "data_type": "BIGINT", "description": "Number of products where prices do not match." },
+      "total_checked_products": { "data_type": "BIGINT", "description": "Total products with both prices available." }
     }
   },
-  "product_identifiers": {
-    "table_description": "Industry-standard identifiers used for cross-referencing products globally.",
+
+  "product_price_segmentation": {
+    "table_description": "Detailed classification of every product into price tiers (Cheap, Medium, Lux) based on global market statistics.",
     "columns": {
-      "aw_deep_link": { "data_type": "VARCHAR(2048)", "description": "The unique Awin tracking link for the product." },
-      "product_name": { "data_type": "VARCHAR(255)", "description": "The full title or name of the product." },
       "aw_product_id": { "data_type": "BIGINT", "description": "Awin's unique internal identifier for the product." },
-      "merchant_product_id": { "data_type": "VARCHAR(100)", "description": "The unique ID assigned to the product by the merchant." },
-      "merchant_image_url": { "data_type": "VARCHAR(2048)", "description": "Direct URL to the product image on the merchant's server." },
-      "description": { "data_type": "TEXT", "description": "Detailed description of the product features." },
-      "merchant_category": { "data_type": "VARCHAR(255)", "description": "The category name assigned by the merchant." },
-      "search_price": { "data_type": "DECIMAL(10,2)", "description": "The current selling price used for search filtering." },
-      "ean": { "data_type": "VARCHAR(13)", "description": "International Article Number (European)." },
-      "isbn": { "data_type": "VARCHAR(13)", "description": "International Standard Book Number." },
-      "upc": { "data_type": "VARCHAR(12)", "description": "Universal Product Code (North America)." },
-      "mpn": { "data_type": "VARCHAR(100)", "description": "Manufacturer Part Number." },
-      "parent_product_id": { "data_type": "VARCHAR(100)", "description": "ID of the master product variant." },
-      "product_GTIN": { "data_type": "VARCHAR(14)", "description": "Global Trade Item Number." }
+      "product_name": { "data_type": "VARCHAR(255)", "description": "The full name of the product." },
+      "category": { "data_type": "VARCHAR(255)", "description": "The classification of the product in the e-commerce platform" },
+      "search_price": { "data_type": "DOUBLE", "description": "The price used for the segmentation." },
+      "price_segment": { "data_type": "VARCHAR(20)", "description": "The calculated label (Cheap, Medium, Lux) for this specific product." }
+    }
+  },
+  "brand_price_segmentation": {
+    "table_description": "Analysis of Brand positioning based on the average price of their products.",
+    "columns": {
+      "brand_name": { "data_type": "VARCHAR(100)", "description": "The name of the brand or manufacturer." },
+      "total_products": { "data_type": "BIGINT", "description": "Count of products associated with this brand." },
+      "average_brand_price": { "data_type": "DOUBLE", "description": "The average price of all products under this brand." },
+      "brand_segment": { "data_type": "VARCHAR(20)", "description": "Classification of the brand (Cheap, Medium, Lux) relative to the global market." }
+    }
+  },
+  "merchant_price_segmentation": {
+    "table_description": "Analysis of Merchant positioning based on the average price of their catalog.",
+    "columns": {
+      "merchant_name": { "data_type": "VARCHAR(255)", "description": "The name of the retailer/merchant." },
+      "merchant_id": { "data_type": "INTEGER", "description": "Unique identifier for the merchant." },
+      "total_products": { "data_type": "BIGINT", "description": "Count of products listed by this merchant." },
+      "average_merchant_price": { "data_type": "DOUBLE", "description": "The average price of all products sold by this merchant." },
+      "merchant_segment": { "data_type": "VARCHAR(20)", "description": "Classification of the merchant (Cheap, Medium, Lux) relative to the global market." }
+    }
+  },
+  "merchant_category_segmentation": {
+    "table_description": "Analysis of Merchant-defined categories positioning based on average price.",
+    "columns": {
+      "merchant_category": { "data_type": "VARCHAR(255)", "description": "The category name as defined by the merchant (not Awin standardized)." },
+      "total_products": { "data_type": "BIGINT", "description": "Count of products within this merchant category." },
+      "average_category_price": { "data_type": "DOUBLE", "description": "Average price of products in this category." },
+      "category_segment": { "data_type": "VARCHAR(20)", "description": "Classification of the merchant category (Cheap, Medium, Lux)." }
+    }
+  },
+  "merchant_brand_offering_segmentation": {
+    "table_description": "Associative table showing the price positioning of brands within specific merchants.",
+    "columns": {
+      "merchant_name": { "data_type": "VARCHAR(255)", "description": "The retailer selling the products." },
+      "brand_name": { "data_type": "VARCHAR(100)", "description": "The brand being sold." },
+      "products_offered": { "data_type": "BIGINT", "description": "Number of products of this brand sold by this merchant." },
+      "average_offering_price": { "data_type": "DOUBLE", "description": "Average price of this brand's products at this merchant." },
+      "offering_segment": { "data_type": "VARCHAR(20)", "description": "Classification of this specific brand offering (Cheap/Medium/Lux) for this merchant." }
     }
   }
 }

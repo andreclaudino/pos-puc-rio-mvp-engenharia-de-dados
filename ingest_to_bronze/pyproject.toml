@@ -28,6 +28,17 @@ transform_default_product_info_to_silver = "mvp.transformations.default_product_
 transform_product_specifications_silver = "mvp.transformations.product_specifications_silver:run_main"
 transform_recommended_metadata_silver = "mvp.transformations.recommended_metadata_silver:run_main"
 
+create_gold_category_price_variability = "mvp.transformations.gold_category_price_variability:run_main"
+create_gold_category_price_classification = "mvp.transformations.gold_category_price_classification:run_main"
+create_gold_price_discrepancy_audit = "mvp.transformations.gold_price_discrepancy_audit:run_main"
+
+create_gold_product_price_segmentation = "mvp.transformations.gold_product_price_segmentation:run_main"
+create_gold_brand_price_segmentation = "mvp.transformations.gold_brand_price_segmentation:run_main"
+create_gold_merchant_price_segmentation = "mvp.transformations.gold_merchant_price_segmentation:run_main"
+create_gold_merchant_brand_offering_segmentation = "mvp.transformations.gold_merchant_brand_offering_segmentation:run_main"
+create_gold_merchant_category_segmentation = "mvp.transformations.gold_merchant_category_segmentation:run_main"
+
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
