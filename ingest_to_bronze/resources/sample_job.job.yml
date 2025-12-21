@@ -10,11 +10,15 @@ resources:
        on_failure:
          - ceberiloclaus@gmail.com
 
+      # Configurações para evitar re-execuções desnecessárias
+      timeout_seconds: 3600
+      max_concurrent_runs: 1
+
       tasks:
-        - task_key: common_fields_bronze        
+        - task_key: default_product_info_bronze
           python_wheel_task:
-            package_name: ingest_to_bronze
-            entry_point: download_feed
+            package_name: mvp
+            entry_point: ingest_to_bronze
             parameters:
               - "--catalog"
               - "mvp"
@@ -28,13 +32,30 @@ resources:
               - --write-mode
               - overwrite
               - --metadata-path
-              - /Workspace/Users/ceberiloclaus@gmail.com/pos-puc-rio-mvp-engenharia-de-dados/metadata/bronze-table-descriptors.json
+              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
           environment_key: default
 
-        - task_key: recommended_bronze        
+        - task_key: default_product_info_silver
           python_wheel_task:
-            package_name: ingest_to_bronze
-            entry_point: download_feed
+            package_name: mvp
+            entry_point: transform_default_product_info_to_silver
+            parameters: [
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--write-mode", "overwrite",
+              "--catalog", "mvp",
+              "--bronze-schema", "bronze_feeds",
+              "--bronze-table", "default_product_info",
+              "--silver-schema", "silver_feeds",
+              "--silver-table", "default_product_info",
+            ]
+          depends_on:
+          - task_key: default_product_info_bronze
+          environment_key: default
+
+        - task_key: recommended_metadata_bronze        
+          python_wheel_task:
+            package_name: mvp
+            entry_point: ingest_to_bronze
             parameters:
               - "--catalog"
               - "mvp"
@@ -48,13 +69,30 @@ resources:
               - --write-mode
               - overwrite
               - --metadata-path
-              - /Workspace/Users/ceberiloclaus@gmail.com/pos-puc-rio-mvp-engenharia-de-dados/metadata/bronze-table-descriptors.json
+              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
           environment_key: default
 
-        - task_key: specification_bronze        
+        - task_key: recommended_metadata_silver
           python_wheel_task:
-            package_name: ingest_to_bronze
-            entry_point: download_feed
+            package_name: mvp
+            entry_point: transform_recommended_metadata_silver
+            parameters: [
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--write-mode", "overwrite",
+              "--catalog", "mvp",
+              "--bronze-schema", "bronze_feeds",
+              "--bronze-table", "recommended_metadata",
+              "--silver-schema", "silver_feeds",
+              "--silver-table", "recommended_metadata",
+            ]
+          depends_on:
+          - task_key: recommended_metadata_bronze
+          environment_key: default
+
+        - task_key: product_specifications_bronze        
+          python_wheel_task:
+            package_name: mvp
+            entry_point: ingest_to_bronze
             parameters:
               - "--catalog"
               - "mvp"
@@ -68,108 +106,125 @@ resources:
               - --write-mode
               - overwrite
               - --metadata-path
-              - /Workspace/Users/ceberiloclaus@gmail.com/pos-puc-rio-mvp-engenharia-de-dados/metadata/bronze-table-descriptors.json
+              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
           environment_key: default
 
-        - task_key: category_hierarchy_bronze        
+        - task_key: dproduct_specifications_silver
           python_wheel_task:
-            package_name: ingest_to_bronze
-            entry_point: download_feed
-            parameters:
-              - "--catalog"
-              - "mvp"
-              - "--schema"
-              - "bronze_feeds"
-              - --table
-              - category_hierarchy
-              - --source-feed-url
-              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/category_hierarchy.csv.gz
-              - --remove-all-null-columns
-              - --write-mode
-              - overwrite
-              - --metadata-path
-              - /Workspace/Users/ceberiloclaus@gmail.com/pos-puc-rio-mvp-engenharia-de-dados/metadata/bronze-table-descriptors.json
+            package_name: mvp
+            entry_point: transform_product_specifications_silver
+            parameters: [
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--write-mode", "overwrite",
+              "--catalog", "mvp",
+              "--bronze-schema", "bronze_feeds",
+              "--bronze-table", "product_specifications",
+              "--silver-schema", "silver_feeds",
+              "--silver-table", "product_specifications",
+            ]
+          depends_on:
+          - task_key: product_specifications_bronze
           environment_key: default
 
-        - task_key: product_prices_bronze        
-          python_wheel_task:
-            package_name: ingest_to_bronze
-            entry_point: download_feed
-            parameters:
-              - "--catalog"
-              - "mvp"
-              - "--schema"
-              - "bronze_feeds"
-              - --table
-              - pricing_and_savings
-              - --source-feed-url
-              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/pricing_and_savings.csv.gz
-              - --remove-all-null-columns
-              - --write-mode
-              - overwrite
-              - --metadata-path
-              - /Workspace/Users/ceberiloclaus@gmail.com/pos-puc-rio-mvp-engenharia-de-dados/metadata/bronze-table-descriptors.json
-          environment_key: default
+        # - task_key: category_hierarchy_bronze        
+        #   python_wheel_task:
+        #     package_name: mvp
+        #     entry_point: ingest_to_bronze
+        #     parameters:
+        #       - "--catalog"
+        #       - "mvp"
+        #       - "--schema"
+        #       - "bronze_feeds"
+        #       - --table
+        #       - category_hierarchy
+        #       - --source-feed-url
+        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/category_hierarchy.csv.gz
+        #       - --remove-all-null-columns
+        #       - --write-mode
+        #       - overwrite
+        #       - --metadata-path
+        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
+        #   environment_key: default
 
-        - task_key: images_bronze        
-          python_wheel_task:
-            package_name: ingest_to_bronze
-            entry_point: download_feed
-            parameters:
-              - "--catalog"
-              - "mvp"
-              - "--schema"
-              - "bronze_feeds"
-              - --table
-              - product_images
-              - --source-feed-url
-              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/product_images.csv.gz
-              - --remove-all-null-columns
-              - --write-mode
-              - overwrite
-              - --metadata-path
-              - /Workspace/Users/ceberiloclaus@gmail.com/pos-puc-rio-mvp-engenharia-de-dados/metadata/bronze-table-descriptors.json
-          environment_key: default
+        # - task_key: product_prices_bronze
+        #   python_wheel_task:
+        #     package_name: mvp
+        #     entry_point: ingest_to_bronze
+        #     parameters:
+        #       - "--catalog"
+        #       - "mvp"
+        #       - "--schema"
+        #       - "bronze_feeds"
+        #       - --table
+        #       - pricing_and_savings
+        #       - --source-feed-url
+        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/pricing_and_savings.csv.gz
+        #       - --remove-all-null-columns
+        #       - --write-mode
+        #       - overwrite
+        #       - --metadata-path
+        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
+        #   environment_key: default
 
-        - task_key: ratings_bronze        
-          python_wheel_task:
-            package_name: ingest_to_bronze
-            entry_point: download_feed
-            parameters:
-              - "--catalog"
-              - "mvp"
-              - "--schema"
-              - "bronze_feeds"
-              - --table
-              - ratings_and_reviews
-              - --source-feed-url
-              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/ratings_and_reviews.csv.gz
-              - --remove-all-null-columns
-              - --write-mode
-              - overwrite
-              - --metadata-path
-              - /Workspace/Users/ceberiloclaus@gmail.com/pos-puc-rio-mvp-engenharia-de-dados/metadata/bronze-table-descriptors.json
-          environment_key: default
+        # - task_key: images_bronze        
+        #   python_wheel_task:
+        #     package_name: mvp
+        #     entry_point: ingest_to_bronze
+        #     parameters:
+        #       - "--catalog"
+        #       - "mvp"
+        #       - "--schema"
+        #       - "bronze_feeds"
+        #       - --table
+        #       - product_images
+        #       - --source-feed-url
+        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/product_images.csv.gz
+        #       - --remove-all-null-columns
+        #       - --write-mode
+        #       - overwrite
+        #       - --metadata-path
+        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
+        #   environment_key: default
 
-        - task_key: product_identifiers_bronze        
-          python_wheel_task:
-            package_name: ingest_to_bronze
-            entry_point: download_feed
-            parameters:
-              - "--catalog"
-              - "mvp"
-              - "--schema"
-              - "bronze_feeds"
-              - --table
-              - product_identifiers
-              - --source-feed-url
-              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/product_identifiers.csv.gz
-              - --remove-all-null-columns
-              - --write-mode
-              - overwrite
-              - --metadata-path
-              - /Workspace/Users/ceberiloclaus@gmail.com/pos-puc-rio-mvp-engenharia-de-dados/metadata/bronze-table-descriptors.json
-          environment_key: default
+        # - task_key: ratings_bronze        
+        #   python_wheel_task:
+        #     package_name: mvp
+        #     entry_point: ingest_to_bronze
+        #     parameters:
+        #       - "--catalog"
+        #       - "mvp"
+        #       - "--schema"
+        #       - "bronze_feeds"
+        #       - --table
+        #       - ratings_and_reviews
+        #       - --source-feed-url
+        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/ratings_and_reviews.csv.gz
+        #       - --remove-all-null-columns
+        #       - --write-mode
+        #       - overwrite
+        #       - --metadata-path
+        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
+        #   environment_key: default
+
+        # - task_key: product_identifiers_bronze        
+        #   python_wheel_task:
+        #     package_name: mvp
+        #     entry_point: ingest_to_bronze
+        #     parameters:
+        #       - "--catalog"
+        #       - "mvp"
+        #       - "--schema"
+        #       - "bronze_feeds"
+        #       - --table
+        #       - product_identifiers
+        #       - --source-feed-url
+        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/product_identifiers.csv.gz
+        #       - --remove-all-null-columns
+        #       - --write-mode
+        #       - overwrite
+        #       - --metadata-path
+        #       - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
+        #   environment_key: default
 
       environments:
         - environment_key: default

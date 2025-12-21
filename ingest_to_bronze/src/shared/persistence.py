@@ -1,20 +1,22 @@
 # /Volumes/workspace/awin_products/raw_data/awin_feed_data/standard.csv.gz
 
-import io
+from pyspark.sql import functions as F
 import json
-import pandas as pd
 from pyspark.sql import DataFrame
-from pyspark.sql.functions import col
 import logging
 from typing import List
 from databricks.sdk.runtime import spark
-import requests
 import warnings
 from typing import Dict, Any, Optional
 
 
 # Get logger for this module
 logger = logging.getLogger(__name__)
+
+
+def load_data_frame_from_table(catalog: str, schema: str, table: str) -> DataFrame:
+    dataframe = spark.table(f"{catalog}.{schema}.{table}")
+    return dataframe
 
 
 def save_dataframe_with_metadata(
@@ -29,6 +31,8 @@ def save_dataframe_with_metadata(
     Main function to save data and enrich with metadata.
     """
     full_table_name = f"{catalog}.{schema_name}.{table_name}"
+
+    spark.sql(f"DROP TABLE IF EXISTS {full_table_name}")
     
     # Call private save function
     _save_to_catalog(data_frame, full_table_name, write_mode)
@@ -134,30 +138,22 @@ def load_raw_gzip_csv(source_url: str, remove_all_null: bool) -> DataFrame:
 
 
 def _load_csv_file(source_url: str) -> DataFrame:
-    """
-    Load a gzipped CSV file into a Spark DataFrame.
-    
-    Args:
-        source_path: Path to the gzipped CSV file
-        
-    Returns:
-        Spark DataFrame loaded from the CSV file
-        
-    Raises:
-        Exception: If the file cannot be loaded
-    """
-    
     try:
         if source_url.startswith("http"):
-            response = requests.get(source_url)
-            response.raise_for_status()
-            csv_data = io.BytesIO(response.content)
-            pdf = pd.read_csv(csv_data, compression='gzip', low_memory=False)
+            # Spark não lê HTTP nativamente bem para CSV Gzip.
+            # Alternativa performática: Baixar via shell para o armazenamento temporário
+            # Isso evita estourar a RAM do Python/Driver.
+            temp_path = "/tmp/awin_feed_temp.csv.gz"
+            import subprocess
+            subprocess.run(["wget", "-O", temp_path, source_url], check=True)
+            source_url = f"file:{temp_path}"
 
-            # df = spark.read.option("compression", "gzip").csv(source_url, header=True)
-            df = spark.createDataFrame(pdf)
-        else:
-            df = spark.read.option("compression", "gzip").csv(source_url, header=True)
+        # Leitura nativa Spark (Distribuída)
+        df = spark.read \
+            .option("header", "true") \
+            .option("inferSchema", "true") \
+            .option("compression", "gzip") \
+            .csv(source_url, sep="|")
             
         logger.info(f"Successfully loaded CSV file from: {source_url}")
         return df
@@ -165,34 +161,72 @@ def _load_csv_file(source_url: str) -> DataFrame:
         logger.error(f"Failed to load CSV file from {source_url}: {str(e)}")
         raise
 
-
 def _identify_all_null_columns(df: DataFrame) -> tuple[List[str], List[str]]:
-    """
-    Identify columns with all null values and columns with data.
-    
-    Args:
-        df: Spark DataFrame to analyze
-        
-    Returns:
-        Tuple of (all_null_columns, kept_columns)
-    """
     total_count = df.count()
-    
     if total_count == 0:
-        logger.info("DataFrame is empty, no columns to analyze")
         return [], df.columns
+
+    # Cria uma lista de agregações: count_if(col is null) para cada coluna
+    null_counts_expr = [F.count(F.when(F.col(c).isNull(), c)).alias(c) for c in df.columns]
     
-    all_null_columns = []
-    kept_columns = []
+    # Executa UM único Job Spark para a tabela toda
+    null_counts_row = df.select(null_counts_expr).collect()[0]
     
-    for column in df.columns:
-        null_count = df.filter(col(column).isNull()).count()
-        if null_count == total_count:
-            all_null_columns.append(column)
-        else:
-            kept_columns.append(column)
+    all_null_columns = [c for c in df.columns if null_counts_row[c] == total_count]
+    kept_columns = [c for c in df.columns if null_counts_row[c] < total_count]
     
     return all_null_columns, kept_columns
+
+
+def cast_columns_from_schema(df: DataFrame, schema_info: Optional[Dict[str, Any]]) -> DataFrame:
+    if not schema_info:
+        return df
+    
+    metadata_cols = schema_info.get("columns", {})
+    casted_columns = []
+    
+    # Store original count for logging
+    original_count = df.count()
+    
+    # Perform safe casting using regex validation - set invalid values to null
+    for col_name in df.columns:
+        if col_name in metadata_cols:
+            target_type = metadata_cols[col_name].get("data_type", "").upper()
+            
+            # Create safe casting using regex validation
+            if "VARCHAR" in target_type or "TEXT" in target_type:
+                # String casts generally don't fail, but we handle them consistently
+                df = df.withColumn(col_name, F.col(col_name).cast("string"))
+                casted_columns.append(col_name)
+            elif "INTEGER" in target_type or "BIGINT" in target_type:
+                # For integer types: check if value matches integer pattern, cast if valid, null otherwise
+                df = df.withColumn(col_name, 
+                    F.when(F.col(col_name).rlike(r'^-?\d+$'), F.col(col_name).cast("long"))
+                     .otherwise(None))
+                casted_columns.append(col_name)
+            elif "DECIMAL" in target_type:
+                # For decimal types: check if value matches decimal pattern, cast if valid, null otherwise
+                df = df.withColumn(col_name,
+                    F.when(F.col(col_name).rlike(r'^-?\d*\.?\d+$'), F.col(col_name).cast("double"))
+                     .otherwise(None))
+                casted_columns.append(col_name)
+    
+    # Log the results but keep all rows
+    if casted_columns:
+        # Count null values in casted columns to report cast errors
+        null_counts = []
+        for col_name in casted_columns:
+            null_count = df.filter(F.col(col_name).isNull()).count()
+            if null_count > 0:
+                null_counts.append(f"{col_name}: {null_count}")
+        
+        if null_counts:
+            logger.warning(f"Set null values for invalid data in columns: {', '.join(null_counts)}")
+            logger.info(f"Total rows processed: {original_count} (all rows retained)")
+        else:
+            logger.info(f"All casts successful. Total rows processed: {original_count}")
+                
+    return df
 
 
 def _remove_all_null_columns(df: DataFrame) -> DataFrame:
