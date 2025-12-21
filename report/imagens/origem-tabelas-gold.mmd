@@ -8,12 +8,10 @@ graph LR
 
     %% GOLD
     G_VAR["gold_price_analysis.category_price_variability"]:::goldClass
-    G_ANALYSIS["gold_price_analysis.category_price_analysis"]:::goldClass
     G_CLASS["gold_price_analysis.category_price_classification"]:::goldClass
     G_PROD["gold_price_analysis.product_price_segmentation"]:::goldClass
 
     %% FLUXO ETL
     S_DEFAULT -.-> G_VAR
-    S_DEFAULT -.-> G_ANALYSIS
     S_DEFAULT -.-> G_CLASS
     S_DEFAULT -.-> G_PROD

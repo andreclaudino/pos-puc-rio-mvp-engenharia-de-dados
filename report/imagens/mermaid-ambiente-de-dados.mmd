@@ -44,10 +44,6 @@ erDiagram
         string category PK
         double price_amplitude
     }
-    G_ANALYSIS["gold_price_analysis.category_price_analysis"] {
-        string category PK
-        double average_price
-    }
     G_CLASS["gold_price_analysis.category_price_classification"] {
         string category PK
         double lux_percentage
@@ -84,7 +80,6 @@ erDiagram
 
     %% Aplicando Estilo Gold (Usando o Alias)
     class G_VAR goldClass
-    class G_ANALYSIS goldClass
     class G_CLASS goldClass
     class G_AUDIT goldClass
     class G_BRAND goldClass
@@ -96,8 +91,6 @@ erDiagram
     %% =========================================================
     %% RELACIONAMENTOS GOLD-GOLD (Lógicos)
     %% =========================================================
-    G_VAR }|..|{ G_ANALYSIS : "Same Grain"
-    G_ANALYSIS }|..|{ G_CLASS : "Same Grain"
     G_MERCH }|..|{ G_OFFER : "Shared Dim"
     G_BRAND }|..|{ G_OFFER : "Shared Dim"
 
@@ -108,7 +101,6 @@ erDiagram
     %% ETL: Fluxo Principal
     S_DEFAULT ||..|{ G_PROD : "ETL Source"
     S_DEFAULT ||..|{ G_VAR : "ETL Source"
-    S_DEFAULT ||..|{ G_ANALYSIS : "ETL Source"
     
     %% ETL: Fluxo de Entidades
     S_SPECS ||..|{ G_BRAND : "ETL Source"

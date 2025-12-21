@@ -32,7 +32,7 @@ resources:
               - --write-mode
               - overwrite
               - --metadata-path
-              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
+              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/table-descriptors.json
           environment_key: default
 
         - task_key: default_product_info_silver
@@ -40,7 +40,7 @@ resources:
             package_name: mvp
             entry_point: transform_default_product_info_to_silver
             parameters: [
-              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/table-descriptors.json",
               "--write-mode", "overwrite",
               "--catalog", "mvp",
               "--bronze-schema", "bronze_feeds",
@@ -57,7 +57,7 @@ resources:
             package_name: mvp
             entry_point: create_gold_category_price_variability
             parameters: [
-              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/table-descriptors.json",
               "--write-mode", "overwrite",
               "--catalog", "mvp",
               "--silver-schema", "silver_feeds",
@@ -73,7 +73,7 @@ resources:
             package_name: mvp
             entry_point: create_gold_category_price_classification
             parameters: [
-              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/table-descriptors.json",
               "--write-mode", "overwrite",
               "--catalog", "mvp",
               "--silver-schema", "silver_feeds",
@@ -89,7 +89,7 @@ resources:
             package_name: mvp
             entry_point: create_gold_price_discrepancy_audit
             parameters: [
-              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/table-descriptors.json",
               "--write-mode", "overwrite",
               "--catalog", "mvp",
               "--silver-schema", "silver_feeds",
@@ -106,7 +106,7 @@ resources:
             package_name: mvp
             entry_point: create_gold_product_price_segmentation
             parameters: [
-              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/table-descriptors.json",
               "--write-mode", "overwrite",
               "--catalog", "mvp",
               "--silver-schema", "silver_feeds",
@@ -122,7 +122,7 @@ resources:
             package_name: mvp
             entry_point: create_gold_merchant_category_segmentation
             parameters: [
-              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/table-descriptors.json",
               "--write-mode", "overwrite",
               "--catalog", "mvp",
               "--silver-schema", "silver_feeds",
@@ -138,7 +138,7 @@ resources:
             package_name: mvp
             entry_point: create_gold_merchant_brand_offering_segmentation
             parameters: [
-              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/table-descriptors.json",
               "--write-mode", "overwrite",
               "--catalog", "mvp",
               "--silver-schema", "silver_feeds",
@@ -168,7 +168,7 @@ resources:
               - --write-mode
               - overwrite
               - --metadata-path
-              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
+              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/table-descriptors.json
           environment_key: default
 
         - task_key: recommended_metadata_silver
@@ -176,7 +176,7 @@ resources:
             package_name: mvp
             entry_point: transform_recommended_metadata_silver
             parameters: [
-              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/table-descriptors.json",
               "--write-mode", "overwrite",
               "--catalog", "mvp",
               "--bronze-schema", "bronze_feeds",
@@ -193,7 +193,7 @@ resources:
             package_name: mvp
             entry_point: create_gold_merchant_price_segmentation
             parameters: [
-              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/table-descriptors.json",
               "--write-mode", "overwrite",
               "--catalog", "mvp",
               "--silver-schema", "silver_feeds",
@@ -222,7 +222,7 @@ resources:
               - --write-mode
               - overwrite
               - --metadata-path
-              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json
+              - /Volumes/workspace/awin_products/raw_data/awin_feed_data/table-descriptors.json
           environment_key: default
 
         - task_key: product_specifications_silver
@@ -230,7 +230,7 @@ resources:
             package_name: mvp
             entry_point: transform_product_specifications_silver
             parameters: [
-              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/table-descriptors.json",
               "--write-mode", "overwrite",
               "--catalog", "mvp",
               "--bronze-schema", "bronze_feeds",
@@ -247,7 +247,7 @@ resources:
             package_name: mvp
             entry_point: create_gold_brand_price_segmentation
             parameters: [
-              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/bronze-table-descriptors.json",
+              "--metadata-path", "/Volumes/workspace/awin_products/raw_data/awin_feed_data/table-descriptors.json",
               "--write-mode", "overwrite",
               "--catalog", "mvp",
               "--silver-schema", "silver_feeds",
