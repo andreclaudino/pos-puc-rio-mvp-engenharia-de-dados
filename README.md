@@ -699,7 +699,7 @@ Esse documento foi gerado pelo notebook [generate-data-dictionary.ipynb](mvp/src
 
 ## Respostas às perguntas.
 
-As respostas às perguntas, junto com a análise critica dos resultados está no notebook [questions-answered-report.ipynb](report/questions-answered-report.ipynb) e caso ele não seja carregado corretamente, no HTML [questions-answered-report.html](report/questions-answered-report.html).
+As respostas às perguntas, junto com a análise critica dos resultados está no notebook [questions-answered-report.ipynb](report/questions-answered-report.ipynb) e caso ele não seja carregado corretamente, no HTML [questions-answered-report.html](report/questions-answered-report.html). No notebook eu apliquei `limit 10` para evitar problemas no github, mas no HTML as respostas estão completas.
 
 Já posso adiantar que, pela análise das respostas, ficou claro a necessidade de mexer na metodologia de cálculo dos segmentos lux, cheap e medium, principalmente para marcas e categorias, embora não tenha me parecido tão problemático para produtos.
 
