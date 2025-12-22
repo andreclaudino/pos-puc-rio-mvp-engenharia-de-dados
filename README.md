@@ -6,17 +6,17 @@ Neste trabalho, proponho a criação do ambiente de dados de um sistema de marke
 
 O objetivo final dessa plataforma, para o MVP, é fornecer dados de análise de perfis de lojas e produtos, permitindo ao analista responder de forma direta às seguintes perguntas:
 
-* Quais categorias possuem produtos com a maior variação de preço (máximo - mínimo)? Considerando as 5 principais categorias (em número de produtos)
-* Quais categorias possuem produtos com a menor variação de preço (máximo - mínimo)? Considerando as 5 principais categorias (em número de produtos)
-* Dadas as 5 principais categorias com produtos na menor variação de preço, quais categorias possuem produtos mais caros (considerando o preço médio dos produtos na categoria)?
-* Dadas as 5 principais categorias com produtos na menor variação de preço, quais categorias possuem produtos mais baratos (considerando o preço médio dos produtos na categoria)?
+* Quais categorias possuem produtos com a maior variação de preço (máximo - mínimo)?
+* Quais categorias possuem produtos com a menor variação de preço (máximo - mínimo)?
+* Quais categorias possuem produtos mais caros (considerando o preço médio dos produtos na categoria)?
+* Quais categorias possuem produtos mais baratos (considerando o preço médio dos produtos na categoria)?
 * Quais categorias possuem mais produtos classificados como "luxo" (preço acima do 9º decil)?
 * Quais categorias possuem mais produtos classificados como "baratos" (preço abaixo da mediana)?
 * Qual é a diferença média entre o display_price, mostrado ao cliente, e o search_price, usado para ranquear os produtos na busca? Essa diferença é a mesma para todas as categorias? Se não, quais categorias possuem as maiores e menores diferenças?
 * Quais produtos estão nas categorias cheap, medium e lux?
 * Baseado na média de preços, quais marcas (brands) estão nas categorias cheap, medium lux?
 * Baseado na média de preços, quais vendedores (merchants) estão nas categorias cheap, medium lux?
-* Baseado na média de preços, quais categorias de vendedores (merchants) estão nas categorias cheap, medium lux?
+* Baseado na média de preços, quais categorias estão nos segmentos cheap, medium, lux?
 * Associando marcas e vendedores, eu gostaria de uma tabela que represente que o vendedor X fornece produtos de nível (cheap, medium, lux) da marca Y.?
 
 Dessa forma, teremos perguntas que relacionam preços de produtos com categorias, marcas e vendedores, permitindo ao afiliado tomar decisões eficientes de recomendação de acordo com o seu público-alvo.
@@ -444,10 +444,10 @@ def _transform(silver_catalog: str, silver_schema: str) -> DataFrame:
 
 Perguntas:
 
-* Quais categorias possuem produtos com a maior variação de preço (máximo - mínimo)? Considerando as 5 principais categorias (em número de produtos).
+* Quais categorias possuem produtos com a maior variação de preço (máximo - mínimo)?
 * Quais categorias possuem produtos com a menor variação de preço?
 
-O que nos levou a gerar a tabela da forma: O ETL pré-calcula a amplitude (price_amplitude = MAX - MIN) e mantém a contagem de produtos (product_count). Isso é fundamental para filtrar outliers (categorias com poucos produtos que distorcem a análise) e focar nas "5 principais categorias", conforme solicitado.
+O que nos levou a gerar a tabela da forma: O ETL pré-calcula a amplitude (price_amplitude = MAX - MIN) e mantém a contagem de produtos (product_count). Isso é fundamental para filtrar outliers (categorias com poucos produtos que distorcem a análise).
 
 ```python
 def _transform(silver_catalog: str, silver_schema: str) -> DataFrame:
@@ -522,7 +522,7 @@ def _transform(silver_catalog: str, silver_schema: str) -> DataFrame:
 
 Pergunta:
 * Baseado na média de preços, quais categorias de vendedores (merchants) estão nas categorias cheap, medium lux?
-* Dadas as 5 principais categorias com produtos na menor variação de preço, quais categorias possuem produtos mais caros/baratos?
+* Quais categorias possuem produtos mais caros/baratos?
 
 O que nos levou a gerar a tabela da forma: O ETL agrupa os dados por Categoria e calcula o preço médio (average_category_price). Para a pergunta "Quais categorias estão em Cheap/Medium/Lux", o ETL já cria a coluna category_segment. Para as perguntas cruzadas (variação vs preço médio), esta tabela fornece a métrica de média que não existe na tabela de variabilidade.
 
@@ -677,9 +677,13 @@ def _transform(silver_catalog: str, silver_schema: str) -> DataFrame:
 
 ### Estruturação do pipeline
 
-O pipeline completo de ingestão e ETL foi construído utilizando *assets bundles* do Databricks. O Asset bundle está na pasta [mvp](mvp/) deste repositório. para fins de ilustração. O arquivo de descrição do pipeline pode ser encontrado em [sample_job.yml](mvp/resources/sample_job.job.yml), e a seguir, apresento a imagem do pipeline em execução no databricks.
+O pipeline completo de ingestão e ETL foi construído utilizando *assets bundles* do Databricks. O Asset bundle está na pasta [mvp](mvp/) deste repositório. para fins de ilustração. O arquivo de descrição do pipeline pode ser encontrado em [sample_job.yml](mvp/resources/sample_job.job.yml), e a seguir, apresento a imagem do pipeline executado no databricks.
 
 ![Pipeline completo](report/imagens/tasks-sequence2.png)
+
+Apresento também as tabelas geradas como resultado da execução.
+
+![Tabelas geradas](report/imagens/tabelas-geradas.png)
 
 Aqui apresento um diagrama do pipeline explicitando as dependências e quais tasks correspondem a quais camadas
 
@@ -691,3 +695,32 @@ Aqui apresento um diagrama do pipeline explicitando as dependências e quais tas
 Para facilitar, deixei a documentação das tabelas no arquivo [data-dictionary.md](report/datadictionary.md), por se tratar de um arquivo grande, preferi manter separado. Lá é possível encontrar a descrição de tabelas e colunas, valores possíveis de colunas categóricas (para aquelas que tem centenas de valores inclui apenas alguns), intervalos de variação para colunas numéricas e taxas de nulos. Lá podemos observar como algumas colunas na camada Bronze, como `last_updated` estão mal formatadas, contendo links e sendo identificadas como categóricas pela heurística de documentação. Também podemos ver colunas praticamente nulas na camada Bronze como `rrp_price` com 91.82% de nulos.
 
 Esse documento foi gerado pelo notebook [generate-data-dictionary.ipynb](mvp/src/mvp/analysis/generate-data-dictionary.ipynb) que lê as tabelas e gera a documentação em markdown para revisão.
+
+
+## Respostas às perguntas.
+
+As respostas às perguntas, junto com a análise critica dos resultados está no notebook [questions-answered-report.ipynb](report/questions-answered-report.ipynb) e caso ele não seja carregado corretamente, no HTML [questions-answered-report.html](report/questions-answered-report.html).
+
+Já posso adiantar que, pela análise das respostas, ficou claro a necessidade de mexer na metodologia de cálculo dos segmentos lux, cheap e medium, principalmente para marcas e categorias, embora não tenha me parecido tão problemático para produtos.
+
+A falta de uma categorização padrão também prejudicou bastante, mas as perguntas foram respondidas pelos dados, embora, eu sinta que não tenho a devida confiância nos resultados por causa dos motivos já citados (categoria e segmentação não confiáveis).
+
+Abordarei isso nos meus próximos passos neste trabalho.
+
+## Autoavaliação
+
+A qualidade de dados do feed da AWIN é surpreendentemente ruim. Muitos campos simplesmente não são preenchidos e como consequência, muita informação não é disponibilizada. Campos que deveriam ser padronizados como a categoria de produto segundo a Awin, simplesmente não estão preenchidos, o que nos obriga a depender de conversões sobre dados não padronizados de diferentes vendors. Dados de identificadores globais como códigos de barras oferecem o mesmo problema, além disso, há muita redundância nos dados.
+
+A limpeza dos dados se fez importantíssima, tanto para detectar esses problemas quando para corrigir os dados para o tipo correto. Infelizmente, não foi possível ir muito além com este conjunto de dados, então me limitei a responder questões simples.
+
+Por outro lado, o projeto de entender como lojas se posicionam para clientes com relação aos preços de seus produtos é um desejo antigo meu, pois há anos quero desenvolver um projeto que facilite a busca por produtos online, e parte disso está em encontrar preços adequados ao perfil do cliente, que muitas vezes não dependem apenas de valor, mas do preço relativo ao valor global que o produto tem. Com isso, o desafio de trabalhar com estes dados foi muito interessante, visto que pouco estava disponível mas ainda assim foi possível responder a essas perguntas, claro, com ressalvas.
+
+Agora, sobre essas ressalvas: Uma vez que as categorias não eram confiáveis, já que não temos o mapeamento perfeito da visão de uma certa categoria entre lojas diferentes, fica difícil agrupar os produtos. Pois uma loja especializada em roupas femininas pode categorizar uma certa roupa como cropped enquanto uma loja de roupas de times de futebol categoriza apenas como feminino e uma loja especializa em roupas esportivas pode classificar como roupa para dança ou corrida, essas duas roupas não são comparáveis se olharmos a categoria apenas, mas seriam as mesmas, porém, diante da loja tem especififidade diferente.
+
+Sem o critério fiel de categoria, acabo perdendo o real lastro de comparação, o que torna a roupa um pouco mais abstrato.
+
+Outro problema presente é a dificuldade em definir produtos de luxo/baratos. Assumi que produtos de luxo são aqueles que ocupam os 10% mais caros de uma categoria, enquanto baratos são a maioria, os 50% mais baratos. Essa tecnica falha ao encontrarmos produtos que tem faixas de preço próximoas, o que, por falta de tempo e necessidade, não abordei. Os produtos mais caros de um intervalo de preços que varia entre R$70 e R$100, não podem ser definidos adequadamente como luxo, ao menos não parece adequado, pois um intervalo de R$30 é muito pequeno para efetivamente mudar a percepção do consumidor sobre o luxo certos produtos.
+
+### Próximos passos
+
+Cmo próximos passos eu vou procurar uma forma melhor de definir as categorias entre lojas diferentes, talvez usando palavras chave ou usando machine learning para classificar os produtos à partir dos textos. Outro ponto é definir melhor os segmentos `cheap`, `medium` e `lux`, a análise se mostrou complicada, marcas conhecidas por produtos de luxo estavam sendo vendidas como produtos medium, como `calvil klein`, é importante confirmar se não existe um produto desta marca mais acessível, ou se realmente estamos falando de uma metodologia ruim para agrupar os preços.
